@@ -1,0 +1,60 @@
+Sub Multiple_year_stock_data()
+Dim ws As Worksheet
+Dim ticker As String
+Dim vol As Double
+Dim year_open As Double
+Dim year_close As Double
+Dim yearly_change As Double
+Dim percent_change As Double
+Dim Summary_Table_Row As Integer
+Dim lastrow As Long
+Dim nextSumRow As Long
+Dim i As Long
+Dim strTicker As String
+Dim dblYearOpen As Double
+Dim dblYearClose As Double
+Dim dblStockVol As Double
+
+lastrow = Cells.SpecialCells(xlCellTypeLastCell).Row
+
+strTicker = Range("A2").Value
+dblYearOpen = Range("C2").Value
+dblStockVol = Range("G2").Value
+nextSumRow = 2
+
+
+On Error Resume Next
+
+For Each ws In ThisWorkbook.Worksheets
+    Summary_Table_Row = 2
+
+    For i = 2 To lastrow + 1
+        If Range("A" & i).Value <> strTicker Then
+            dblYearClose = Range("F" & i - 1).Value
+
+            Range("I" & nextSumRow).Value = strTicker
+            Range("J" & nextSumRow).Value = dblYearClose - dblYearOpen
+            Range("K" & nextSumRow).Value = (1 - (dblYearClose / dblYearOpen))
+            Range("L" & nextSumRow).Value = dblStockVol
+
+            nextSumRow = nextSumRow + 1
+            strTicker = Range("A" & i).Value
+            dblYearOpen = Range("C" & i).Value
+            dblStockVol = Range("G" & i).Value
+        End If
+
+
+    Next i
+    
+ws.Columns("K").NumberFormat = "0.00%"
+
+Next ws
+
+
+
+
+
+
+
+
+End Sub
